@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Lab</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #09090b; --bg2: #0c0c0f; --surface: #131316; --surface2: #19191e;
+    --surface3: #1f1f26; --border: #27272a; --border2: #3f3f46;
+    --text: #fafafa; --text2: #a1a1aa; --text3: #71717a; --text4: #52525b;
+    --accent: #818cf8; --accent2: #6366f1; --accent-glow: rgba(99,102,241,0.15);
+    --green: #4ade80; --green-bg: rgba(74,222,128,0.1); --green-border: rgba(74,222,128,0.2);
+    --red: #f87171; --red-bg: rgba(248,113,113,0.1);
+    --amber: #fbbf24; --amber-bg: rgba(251,191,36,0.08); --amber-border: rgba(251,191,36,0.2);
+    --pink: #f472b6; --cyan: #22d3ee; --purple: #a78bfa; --orange: #fb923c;
+    --emerald: #34d399; --blue: #60a5fa; --rose: #fb7185; --lime: #a3e635;
+    --teal: #2dd4bf; --yellow: #facc15; --fuchsia: #e879f9; --sky: #38bdf8;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius: 12px; --radius-sm: 8px; --radius-xs: 6px;
+  }
+
+  .light {
+    --bg: #f5f5f7; --bg2: #ebebef; --surface: #ffffff; --surface2: #f8f8fa;
+    --surface3: #eeeff2; --border: #e0e0e6; --border2: #c8c8d0;
+    --text: #1a1a23; --text2: #5c5c6b; --text3: #8a8a9a; --text4: #a8a8b6;
+    --accent: #6366f1; --accent2: #4f46e5; --accent-glow: rgba(99,102,241,0.1);
+    --green: #16a34a; --green-bg: rgba(22,163,74,0.08); --green-border: rgba(22,163,74,0.2);
+    --red: #dc2626; --red-bg: rgba(220,38,38,0.08);
+    --amber: #d97706; --amber-bg: rgba(217,119,6,0.07); --amber-border: rgba(217,119,6,0.2);
+    --pink: #db2777; --cyan: #0891b2; --purple: #7c3aed; --orange: #ea580c;
+    --emerald: #059669; --blue: #2563eb; --rose: #e11d48; --lime: #65a30d;
+    --teal: #0d9488; --yellow: #ca8a04; --fuchsia: #c026d3; --sky: #0284c7;
+  }
+
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; overflow: hidden; transition: background 0.25s, color 0.25s; }
+
+  /* ── Layout ── */
+  .app { display: grid; grid-template-rows: 56px 1fr; height: 100vh; }
+
+  /* ── Nav ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; border-bottom: 1px solid var(--border);
+    background: var(--bg); z-index: 10;
+  }
+  .nav-left { display: flex; align-items: center; gap: 16px; }
+  .logo { font-weight: 900; font-size: 0.85rem; letter-spacing: 0.06em; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .logo-icon { width: 24px; height: 24px; background: linear-gradient(135deg, var(--accent), var(--pink)); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+  .nav-pills { display: flex; gap: 2px; background: var(--surface); border-radius: var(--radius-xs); padding: 3px; border: 1px solid var(--border); }
+  .nav-pill {
+    padding: 5px 14px; border-radius: 5px; border: none; background: transparent;
+    color: var(--text3); font-family: var(--mono); font-size: 0.65rem; font-weight: 500;
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .nav-pill:hover { color: var(--text2); }
+  .nav-pill.active { background: var(--surface3); color: var(--text); }
+
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+  .nav-stat { font-family: var(--mono); font-size: 0.65rem; color: var(--text3); display: flex; align-items: center; gap: 6px; }
+  .nav-stat b { color: var(--accent); font-weight: 600; }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  .live-dot.off { background: var(--text4); animation: none; }
+  @keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
+
+  .btn-icon {
+    width: 32px; height: 32px; border-radius: var(--radius-xs); border: 1px solid var(--border);
+    background: var(--surface); color: var(--text3); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+    transition: all 0.15s;
+  }
+  .btn-icon:hover { border-color: var(--border2); color: var(--text); background: var(--surface2); }
+  .btn-icon.active { border-color: var(--accent2); color: var(--accent); background: var(--accent-glow); }
+
+  /* ── Main area ── */
+  .main { display: grid; grid-template-columns: 1fr 380px; overflow: hidden; }
+
+  /* ── Sandbox (left) ── */
+  .sandbox { overflow-y: auto; padding: 20px; }
+  .sandbox::-webkit-scrollbar { width: 4px; }
+  .sandbox::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .bento { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+  .tile {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; transition: border-color 0.2s, box-shadow 0.3s; position: relative;
+  }
+  .tile::before {
+    content: ''; position: absolute; inset: 0; border-radius: var(--radius);
+    opacity: 0; transition: opacity 0.4s; pointer-events: none;
+  }
+  .tile.flash::before { opacity: 1; }
+  .tile:hover { border-color: var(--border2); }
+  .tile.span-2 { grid-column: span 2; }
+
+  .tile-head {
+    padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .tile-title { display: flex; align-items: center; gap: 8px; }
+  .tile-title .icon { font-size: 0.8rem; }
+  .tile-title span { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text2); }
+  .tile-actions { display: flex; align-items: center; gap: 6px; }
+
+  .hf-chip {
+    font-family: var(--mono); font-size: 0.5rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em; padding: 2px 7px; border-radius: 4px;
+    background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border);
+    cursor: default;
+  }
+
+  .sw { width: 28px; height: 16px; border-radius: 8px; border: none; background: var(--border); cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
+  .sw::after { content:''; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--text3); transition: all 0.2s; }
+  .sw.on { background: var(--accent2); }
+  .sw.on::after { transform: translateX(12px); background: white; }
+
+  .tile-body { padding: 14px; }
+
+  /* ── Zone styles ── */
+  .interact-zone {
+    width: 100%; border: 1.5px dashed var(--border); border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text4); transition: all 0.2s; user-select: none;
+    font-family: var(--mono); font-size: 0.68rem;
+  }
+  .interact-zone:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+  .field {
+    width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-xs);
+    padding: 10px 12px; color: var(--text); font-family: var(--mono); font-size: 0.75rem;
+    outline: none; transition: border-color 0.15s;
+  }
+  .field:focus { border-color: var(--accent); }
+  .field-sm { padding: 7px 10px; font-size: 0.68rem; }
+  .field::placeholder { color: var(--text4); }
+
+  select.field { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2371717a'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+  textarea.field { resize: vertical; min-height: 40px; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  input[type="range"] { accent-color: var(--accent); width: 100%; }
+  .check-row { display: flex; align-items: center; gap: 8px; font-size: 0.68rem; color: var(--text2); font-family: var(--mono); }
+  .check-row input { accent-color: var(--accent); width: 15px; height: 15px; }
+  .form-submit { grid-column: 1/-1; padding: 7px; background: var(--accent2); border: none; border-radius: var(--radius-xs); color: white; font-family: var(--sans); font-size: 0.68rem; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
+  .form-submit:hover { opacity: 0.85; }
+
+  .drag-area { display: flex; gap: 10px; align-items: center; }
+  #draggable-el {
+    width: 56px; height: 56px; background: linear-gradient(135deg, var(--accent2), var(--fuchsia));
+    border-radius: var(--radius-xs); cursor: grab; display: flex; align-items: center; justify-content: center;
+    font-size: 0.58rem; color: rgba(255,255,255,0.85); font-family: var(--mono); font-weight: 600;
+  }
+  #drop-target {
+    flex: 1; height: 56px; border: 1.5px dashed var(--border); border-radius: var(--radius-xs);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.68rem; color: var(--text4); font-family: var(--mono); transition: all 0.15s;
+  }
+  #drop-target.over { border-color: var(--amber); background: var(--amber-bg); color: var(--amber); }
+
+  #scroll-area {
+    height: 70px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-xs);
+    padding: 8px 10px; font-family: var(--mono); font-size: 0.62rem; color: var(--text4); line-height: 2;
+    background: var(--bg2);
+  }
+  #scroll-area::-webkit-scrollbar { width: 3px; }
+  #scroll-area::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .ptr-wrap { position: relative; height: 70px; border: 1px solid var(--border); border-radius: var(--radius-xs); overflow: hidden; cursor: crosshair; touch-action: none; background: var(--bg2); }
+  .ptr-wrap canvas { width: 100%; height: 100%; display: block; }
+  .ptr-hint { position: absolute; bottom: 4px; right: 8px; font-size: 0.5rem; color: var(--text4); font-family: var(--mono); pointer-events: none; }
+
+  .anim-stage { height: 60px; border: 1px solid var(--border); border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: center; background: var(--bg2); overflow: hidden; }
+  #anim-el { width: 36px; height: 36px; background: linear-gradient(135deg, var(--pink), var(--cyan)); border-radius: 6px; opacity: 0.3; }
+  #anim-el.running { animation: bounce 1.8s ease-in-out infinite; opacity: 1; }
+  @keyframes bounce { 0%,100%{ transform: translateX(0) scale(1); } 25%{ transform: translateX(50px) scale(1.1); } 50%{ transform: translateX(0) scale(1) rotate(180deg); } 75%{ transform: translateX(-50px) scale(0.9); } }
+
+  .media-wrap { border: 1px solid var(--border); border-radius: var(--radius-xs); background: var(--bg2); padding: 8px; }
+  .media-wrap audio { width: 100%; height: 32px; }
+
+  .status-row { padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-xs); background: var(--bg2); display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.68rem; color: var(--text2); }
+  .sdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .sdot.on { background: var(--green); box-shadow: 0 0 8px rgba(74,222,128,0.4); }
+  .sdot.off { background: var(--red); }
+
+  .touch-pad { height: 70px; border: 1.5px dashed var(--border); border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: center; font-size: 0.68rem; color: var(--text4); font-family: var(--mono); touch-action: none; background: var(--bg2); }
+
+  .editable { min-height: 42px; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-xs); background: var(--bg2); font-family: var(--mono); font-size: 0.68rem; color: var(--text); outline: none; }
+  .editable:focus { border-color: var(--accent); }
+
+  .resize-el { width: 100%; height: 50px; border: 1px solid var(--border); border-radius: var(--radius-xs); background: var(--bg2); resize: both; overflow: auto; display: flex; align-items: center; justify-content: center; font-size: 0.62rem; color: var(--text4); font-family: var(--mono); }
+
+  .detail-el { border: 1px solid var(--border); border-radius: var(--radius-xs); background: var(--bg2); }
+  .detail-el summary { padding: 8px 10px; cursor: pointer; font-size: 0.68rem; color: var(--text2); font-family: var(--mono); }
+  .detail-el .det-body { padding: 8px 10px; border-top: 1px solid var(--border); font-size: 0.62rem; color: var(--text4); font-family: var(--mono); }
+
+  /* ── Log panel (right) ── */
+  .log { background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+
+  .log-head {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .log-head-left { display: flex; align-items: center; gap: 10px; }
+  .log-head h3 { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); }
+  .badge-paused { font-size: 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 6px; border-radius: 3px; background: var(--amber-bg); color: var(--amber); display: none; }
+  .badge-paused.show { display: inline-block; }
+
+  .log-filters {
+    padding: 8px 12px; border-bottom: 1px solid var(--border);
+    display: flex; flex-wrap: wrap; gap: 4px; flex-shrink: 0;
+  }
+  .fbtn {
+    padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border);
+    background: transparent; color: var(--text4); font-family: var(--mono);
+    font-size: 0.55rem; cursor: pointer; transition: all 0.12s;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .fbtn:hover { border-color: var(--border2); color: var(--text3); }
+  .fbtn.on { border-color: var(--accent2); color: var(--accent); background: var(--accent-glow); }
+  .fbtn .fc { font-size: 0.48rem; opacity: 0.6; }
+
+  .log-stream { flex: 1; overflow-y: auto; padding: 4px 8px; }
+  .log-stream::-webkit-scrollbar { width: 3px; }
+  .log-stream::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .evt {
+    display: grid; grid-template-columns: 48px 62px 1fr; gap: 6px;
+    padding: 4px 8px; border-radius: var(--radius-xs); margin-bottom: 1px;
+    font-family: var(--mono); font-size: 0.58rem; line-height: 1.6;
+    animation: fadeIn 0.1s ease; align-items: baseline;
+  }
+  .evt .et { color: var(--text4); font-size: 0.5rem; }
+  .evt .en { font-weight: 600; text-transform: uppercase; white-space: nowrap; }
+  .evt .ed { color: var(--text4); word-break: break-all; overflow: hidden; text-overflow: ellipsis; }
+
+  .log-foot {
+    padding: 8px 16px; border-top: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.58rem; color: var(--text4);
+    display: flex; justify-content: space-between;
+  }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(-2px); } to { opacity:1; transform:translateY(0); } }
+
+  @media (max-width: 860px) {
+    .main { grid-template-columns: 1fr; grid-template-rows: 1fr 320px; }
+    .bento { grid-template-columns: 1fr; }
+    .tile.span-2 { grid-column: span 1; }
+    .log { border-left: none; border-top: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+<nav>
+  <div class="nav-left">
+    <div class="logo"><div class="logo-icon">E</div>Event Lab</div>
+    <div class="nav-pills">
+      <button class="nav-pill active" onclick="showAll()">All</button>
+      <button class="nav-pill" onclick="showGroup('interaction')">Interaction</button>
+      <button class="nav-pill" onclick="showGroup('input')">Input</button>
+      <button class="nav-pill" onclick="showGroup('system')">System</button>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="nav-stat"><span class="live-dot" id="live-dot"></span> <b id="hdr-count">0</b> events</span>
+    <button class="btn-icon" id="btn-pause" title="Pause">&#9208;</button>
+    <button class="btn-icon" id="btn-export" title="Export JSON">&#8681;</button>
+    <button class="btn-icon" id="btn-clear" title="Clear">&#10005;</button>
+    <button class="btn-icon" id="btn-theme" title="Toggle light/dark">&#9790;</button>
+  </div>
+</nav>
+
+<div class="main">
+<div class="sandbox"><div class="bento" id="bento"></div></div>
+
+<div class="log">
+  <div class="log-head">
+    <div class="log-head-left">
+      <h3>Stream</h3>
+      <span class="badge-paused" id="bp">paused</span>
+    </div>
+    <span style="font-family:var(--mono);font-size:0.55rem;color:var(--text4)" id="last-lbl">waiting...</span>
+  </div>
+  <div class="log-filters" id="log-filters"></div>
+  <div class="log-stream" id="log-stream"></div>
+  <div class="log-foot"><span id="lf-count">0 events</span><span id="lf-rate"></span></div>
+</div>
+</div>
+
+</div>
+
+<script>
+// ── Categories ──
+const CATS = [
+  { id:'all',     label:'all',        c:'148,163,184' },
+  { id:'mouse',   label:'mouse',      c:'99,102,241',  group:'interaction' },
+  { id:'key',     label:'keys',       c:'167,139,250', group:'input' },
+  { id:'pointer', label:'pointer',    c:'168,85,247',  group:'interaction' },
+  { id:'touch',   label:'touch',      c:'251,146,60',  group:'interaction' },
+  { id:'drag',    label:'drag',       c:'251,191,36',  group:'interaction' },
+  { id:'focus',   label:'focus',      c:'244,114,182', group:'input' },
+  { id:'form',    label:'form',       c:'34,211,238',  group:'input' },
+  { id:'clip',    label:'clipboard',  c:'250,204,21',  group:'input' },
+  { id:'select',  label:'selection',  c:'244,114,182', group:'input' },
+  { id:'scroll',  label:'scroll',     c:'52,211,153',  group:'interaction' },
+  { id:'anim',    label:'animation',  c:'163,230,53',  group:'system' },
+  { id:'media',   label:'media',      c:'232,121,249', group:'system' },
+  { id:'nav',     label:'navigation', c:'248,113,113', group:'system' },
+  { id:'network', label:'network',    c:'96,165,250',  group:'system' },
+  { id:'resize',  label:'resize',     c:'45,212,191',  group:'system' },
+  { id:'other',   label:'other',      c:'148,163,184', group:'system' },
+];
+const CC = {}; CATS.forEach(c => CC[c.id] = c.c);
+
+const TM = {
+  click:'mouse',dblclick:'mouse',mousedown:'mouse',mouseup:'mouse',mousemove:'mouse',
+  mouseenter:'mouse',mouseleave:'mouse',contextmenu:'mouse',auxclick:'mouse',
+  keydown:'key',keyup:'key',keypress:'key',input:'key',
+  compositionstart:'key',compositionend:'key',compositionupdate:'key',
+  dragstart:'drag',drag:'drag',dragend:'drag',dragenter:'drag',dragover:'drag',dragleave:'drag',drop:'drag',
+  change:'form',submit:'form',reset:'form',beforeinput:'form',
+  focus:'focus',blur:'focus',focusin:'focus',focusout:'focus',
+  copy:'clip',cut:'clip',paste:'clip',
+  scroll:'scroll',wheel:'scroll',
+  pointerdown:'pointer',pointerup:'pointer',pointermove:'pointer',pointerenter:'pointer',
+  pointerleave:'pointer',pointercancel:'pointer',gotpointercapture:'pointer',lostpointercapture:'pointer',
+  touchstart:'touch',touchmove:'touch',touchend:'touch',touchcancel:'touch',
+  hashchange:'nav',popstate:'nav',pagehide:'nav',pageshow:'nav',
+  online:'network',offline:'network',
+  play:'media',pause:'media',playing:'media',ended:'media',timeupdate:'media',durationchange:'media',
+  volumechange:'media',ratechange:'media',seeking:'media',seeked:'media',loadstart:'media',progress:'media',
+  suspend:'media',canplay:'media',canplaythrough:'media',loadeddata:'media',loadedmetadata:'media',
+  animationstart:'anim',animationend:'anim',animationiteration:'anim',animationcancel:'anim',
+  transitionstart:'anim',transitionend:'anim',transitioncancel:'anim',transitionrun:'anim',
+  resize:'resize', selectionchange:'select',selectstart:'select',toggle:'other',
+  visibilitychange:'other',load:'other',beforeunload:'other',
+  storage:'other',message:'other',gamepadconnected:'other',
+  beforeprint:'other',afterprint:'other',unhandledrejection:'other',fullscreenchange:'other',
+};
+
+const HF = new Set(['mousemove','pointermove','drag','dragover','timeupdate','animationiteration','scroll','wheel','touchmove','resize','progress','selectionchange']);
+const hfOn = {}; HF.forEach(e => hfOn[e] = false);
+
+// ── State ──
+const filters = new Set(CATS.map(c => c.id));
+const cc = {}; CATS.forEach(c => cc[c.id] = 0);
+let total = 0, paused = false, logArr = [];
+const MAX = 500;
+
+const stream = document.getElementById('log-stream');
+const hdrCount = document.getElementById('hdr-count');
+const lastLbl = document.getElementById('last-lbl');
+const lfCount = document.getElementById('lf-count');
+const bp = document.getElementById('bp');
+const liveDot = document.getElementById('live-dot');
+
+// Tile flash map
+const tileFlash = {};
+
+function ts() { const d=new Date(); return d.toTimeString().slice(0,8)+'.'+String(d.getMilliseconds()).padStart(3,'0'); }
+
+function detail(e) {
+  const t=e.type;
+  if(t==='keydown'||t==='keyup'||t==='keypress') return 'key="'+e.key+'" code="'+e.code+'"';
+  if(t==='click'||t==='mousedown'||t==='mouseup'||t==='dblclick'||t==='auxclick') return 'btn='+e.button+' ('+e.offsetX+','+e.offsetY+')';
+  if(t==='mousemove') return '('+e.offsetX+','+e.offsetY+')';
+  if(t==='wheel') return '\u0394y='+Math.round(e.deltaY);
+  if(t==='scroll') return 'top='+Math.round((e.target||{}).scrollTop||0);
+  if(t==='change'&&e.target) return 'val="'+(e.target.value||'')+'"';
+  if(t==='input'&&e.target) return '"'+((e.target.value||'').slice(0,16))+'"';
+  if(t==='pointermove') return '('+Math.round(e.offsetX)+','+Math.round(e.offsetY)+') '+e.pointerType;
+  if(t==='pointerdown'||t==='pointerup') return '('+Math.round(e.offsetX)+','+Math.round(e.offsetY)+') '+e.pointerType;
+  if(t==='touchstart'||t==='touchend'||t==='touchmove') return 'touches='+e.touches.length;
+  if(t==='drop') return 'dropped';
+  if(t==='timeupdate'&&e.target) return Math.round(e.target.currentTime)+'s';
+  if(t==='animationstart'||t==='animationend'||t==='animationiteration') return e.animationName;
+  if(t==='transitionstart'||t==='transitionend') return e.propertyName;
+  if(t==='resize') return window.innerWidth+'\u00d7'+window.innerHeight;
+  if(t==='selectionchange'){const s=document.getSelection();return '"'+(s?s.toString():'').slice(0,16)+'"';}
+  if(t==='contextmenu') return '('+e.clientX+','+e.clientY+')';
+  return '';
+}
+
+function log(e, cat) {
+  if(paused) return;
+  const c = cat || TM[e.type] || 'other';
+  if(!filters.has(c) && !filters.has('all')) return;
+  if(HF.has(e.type) && !hfOn[e.type]) return;
+
+  total++; cc[c]=(cc[c]||0)+1;
+  hdrCount.textContent = total;
+  lfCount.textContent = total+' events';
+  lastLbl.textContent = e.type;
+  updateFC();
+
+  // Flash tile
+  const tile = tileFlash[c];
+  if(tile) { tile.classList.remove('flash'); void tile.offsetWidth; tile.classList.add('flash'); setTimeout(()=>tile.classList.remove('flash'),400); }
+
+  const d = detail(e), time = ts(), color = CC[c]||'148,163,184';
+  logArr.unshift({type:e.type,detail:d,cat:c,time:time});
+  if(logArr.length>MAX) logArr.length=MAX;
+
+  const row = document.createElement('div');
+  row.className='evt';
+  row.style.background='rgba('+color+',0.04)';
+  row.innerHTML='<span class="et">'+time.slice(0,8)+'</span><span class="en" style="color:rgb('+color+')">'+e.type+'</span><span class="ed">'+(d||'\u2014')+'</span>';
+  stream.insertBefore(row, stream.firstChild);
+  while(stream.children.length>MAX) stream.removeChild(stream.lastChild);
+}
+
+function clearAll() {
+  stream.innerHTML=''; total=0; logArr=[];
+  CATS.forEach(c=>cc[c.id]=0);
+  hdrCount.textContent='0'; lfCount.textContent='0 events'; lastLbl.textContent='waiting...';
+  updateFC();
+}
+
+// ── Filters ──
+const flEl = document.getElementById('log-filters');
+const fBtns = {};
+CATS.forEach(c => {
+  const b = document.createElement('button');
+  b.className='fbtn on';
+  b.innerHTML=c.label+' <span class="fc">0</span>';
+  b.onclick = () => {
+    if(c.id==='all'){
+      if(filters.has('all')){ filters.clear(); Object.values(fBtns).forEach(x=>x.classList.remove('on')); }
+      else { CATS.forEach(x=>filters.add(x.id)); Object.values(fBtns).forEach(x=>x.classList.add('on')); }
+    } else {
+      if(filters.has(c.id)){ filters.delete(c.id); b.classList.remove('on'); } else { filters.add(c.id); b.classList.add('on'); }
+    }
+  };
+  fBtns[c.id]=b; flEl.appendChild(b);
+});
+function updateFC() { CATS.forEach(c => { fBtns[c.id].querySelector('.fc').textContent = c.id==='all'?total:(cc[c.id]||0); }); }
+
+// ── Nav buttons ──
+document.getElementById('btn-pause').onclick = function() {
+  paused=!paused; this.classList.toggle('active',paused);
+  this.innerHTML=paused?'&#9654;':'&#9208;';
+  bp.classList.toggle('show',paused);
+  liveDot.classList.toggle('off',paused);
+};
+document.getElementById('btn-export').onclick = function() {
+  const b=new Blob([JSON.stringify(logArr,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(b);
+  a.download='events-'+new Date().toISOString().slice(0,19).replace(/:/g,'-')+'.json';
+  a.click(); URL.revokeObjectURL(a.href);
+};
+document.getElementById('btn-clear').onclick = clearAll;
+document.getElementById('btn-theme').onclick = function() {
+  document.body.classList.toggle('light');
+  this.innerHTML = document.body.classList.contains('light') ? '&#9788;' : '&#9790;';
+};
+
+// Nav group filter
+function showAll() {
+  document.querySelectorAll('.nav-pill').forEach((p,i)=>p.classList.toggle('active',i===0));
+  document.querySelectorAll('.tile').forEach(t=>t.style.display='');
+}
+function showGroup(g) {
+  document.querySelectorAll('.nav-pill').forEach(p=>p.classList.toggle('active',p.textContent.toLowerCase()===g));
+  document.querySelectorAll('.tile').forEach(t=>{
+    const tg=t.dataset.group;
+    t.style.display=(!tg||tg===g)?'':'none';
+  });
+}
+
+// ── Build tiles ──
+const bento = document.getElementById('bento');
+
+function tile(cat, title, icon, group, bodyHTML, opts={}) {
+  const t=document.createElement('div');
+  t.className='tile'+(opts.span2?' span-2':'');
+  t.dataset.group=group||'';
+  const color=CC[cat]||'148,163,184';
+  t.style.setProperty('--tc','rgb('+color+')');
+  t.innerHTML='<div class="tile-head"><div class="tile-title"><span class="icon">'+icon+'</span><span>'+title+'</span></div><div class="tile-actions" id="actions-'+cat+'"></div></div>';
+  const body=document.createElement('div'); body.className='tile-body';
+  if(typeof bodyHTML==='string') body.innerHTML=bodyHTML; else body.appendChild(bodyHTML);
+  t.appendChild(body);
+  // flash glow
+  t.style.cssText+='--tc-glow:rgba('+color+',0.08);';
+  t.querySelector('.tile-head').style.borderBottomColor='rgba('+color+',0.1)';
+  tileFlash[cat]=t;
+  bento.appendChild(t);
+  return {tile:t, body:body, actions:document.getElementById('actions-'+cat)};
+}
+
+function addHF(actionsEl, events, label) {
+  const chip=document.createElement('span'); chip.className='hf-chip'; chip.textContent='HF';chip.title='High frequency - off by default';
+  const sw=document.createElement('button'); sw.className='sw'; sw.title='Toggle '+label;
+  sw.onclick=()=>{ const on=!hfOn[events[0]]; events.forEach(e=>hfOn[e]=on); sw.classList.toggle('on',on); };
+  actionsEl.appendChild(chip); actionsEl.appendChild(sw);
+}
+
+// Mouse
+const m = tile('mouse','Mouse & Click','\u{1F5B1}','interaction','<div id="click-zone" class="interact-zone" style="height:70px;cursor:pointer">click \u00b7 dblclick \u00b7 mousedown \u00b7 mouseup \u00b7 enter \u00b7 leave</div>');
+addHF(m.actions,['mousemove'],'mousemove');
+
+// Keyboard
+tile('key','Keyboard','\u2328','input','<input type="text" id="key-input" class="field" placeholder="Type here \u2014 keydown / keyup / input">');
+
+// Pointer
+const pt = tile('pointer','Pointer','\u{1F58A}','interaction','<div id="ptr-wrap" class="ptr-wrap"><canvas id="ptr-cv"></canvas><span class="ptr-hint">draw \u00b7 dblclick=clear</span></div>');
+addHF(pt.actions,['pointermove'],'pointermove');
+
+// Form
+tile('form','Form','\u{1F4CB}','input',
+  '<form id="test-form" class="form-grid">'+
+  '<input type="text" placeholder="text" id="f-text" class="field field-sm">'+
+  '<input type="number" placeholder="number" id="f-num" class="field field-sm">'+
+  '<select id="f-sel" class="field field-sm"><option value="">select</option><option value="a">A</option><option value="b">B</option></select>'+
+  '<input type="range" min="0" max="100" id="f-range">'+
+  '<div class="check-row"><input type="checkbox" id="f-chk"><label for="f-chk">check</label></div>'+
+  '<div class="check-row"><input type="radio" name="r" id="f-rad"><label for="f-rad">radio</label></div>'+
+  '<textarea id="f-ta" class="field field-sm" placeholder="textarea"></textarea>'+
+  '<button type="submit" class="form-submit">Submit</button></form>');
+
+// Drag
+const dr = tile('drag','Drag & Drop','\u{1F4E6}','interaction','<div class="drag-area"><div id="draggable-el" draggable="true">drag</div><div id="drop-target">drop here</div></div>');
+addHF(dr.actions,['drag','dragover'],'drag');
+
+// Focus
+tile('focus','Focus','\u{1F3AF}','input','<div style="display:flex;gap:6px"><input id="fo-a" class="field field-sm" placeholder="focus / blur" style="flex:1"><input id="fo-b" class="field field-sm" placeholder="tab here" style="flex:1"><input id="fo-c" class="field field-sm" placeholder="and here" style="flex:1"></div>');
+
+// Scroll
+const sc = tile('scroll','Scroll & Wheel','\u{1F5F2}','interaction','<div id="scroll-area"><div>scroll me...</div><div>line 2</div><div>line 3</div><div>line 4</div><div>line 5</div><div>line 6</div><div>line 7</div><div>line 8</div></div><div id="wheel-target" class="interact-zone" style="height:50px;cursor:ns-resize;margin-top:8px">wheel here</div>');
+addHF(sc.actions,['scroll','wheel'],'scroll/wheel');
+
+// Clipboard
+tile('clip','Clipboard','\u{1F4CE}','input','<div style="display:flex;gap:6px"><input id="clip-in" class="field field-sm" value="copy or paste here" style="flex:1"><button class="form-submit" style="grid-column:auto;padding:6px 12px" id="cp-btn">copy</button><button class="form-submit" style="grid-column:auto;padding:6px 12px;background:var(--border)" id="ct-btn">cut</button></div>');
+
+// Touch
+const to = tile('touch','Touch','\u{1F446}','interaction','<div id="touch-pad" class="touch-pad">Touch here (mobile / touchscreen)</div>');
+addHF(to.actions,['touchmove'],'touchmove');
+
+// Selection
+const se = tile('select','Selection','\u{1F520}','input','<div id="sel-zone" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--bg2);font-size:0.68rem;color:var(--text2);user-select:text">Select text here to trigger selectionchange and selectstart events.</div>');
+addHF(se.actions,['selectionchange'],'selectionchange');
+
+// ContentEditable
+tile('key','ContentEditable','\u270F','input','<div id="edit-box" class="editable" contenteditable="true">Edit me \u2014 input, keydown, selection events</div>');
+
+// Animation
+const an = tile('anim','Animation','\u{1F3AC}','system','<div class="anim-stage"><div id="anim-el"></div></div>');
+addHF(an.actions,['animationiteration'],'iteration');
+const anSw=document.createElement('button'); anSw.className='sw'; anSw.title='Run animation';
+anSw.onclick=()=>{ const el=document.getElementById('anim-el'); el.classList.toggle('running'); anSw.classList.toggle('on',el.classList.contains('running')); };
+an.actions.appendChild(anSw);
+
+// Media
+const md = tile('media','Media','\u{1F3B5}','system','<div class="media-wrap"><audio id="aud" controls><source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAA==" type="audio/wav"></audio></div>');
+addHF(md.actions,['timeupdate','progress'],'timeupdate');
+
+// Resize
+const rs = tile('resize','Resize','\u{1F5D7}','system','<div id="rsz-box" class="resize-el">resize this or the window</div>');
+addHF(rs.actions,['resize'],'window resize');
+
+// Toggle
+tile('other','Toggle (details)','\u{1F504}','system','<details id="det-el" class="detail-el"><summary>Click to toggle</summary><div class="det-body">Revealed via toggle event</div></details>');
+
+// Network
+tile('network','Network','\u{1F310}','system','<div class="status-row"><span class="sdot on" id="nd"></span><span id="ns">Online</span></div>');
+
+// Visibility
+tile('other','Page Visibility','\u{1F441}','system','<div class="status-row"><span class="sdot on" id="vd"></span><span id="vs">Visible</span></div>');
+
+
+// ══════════════════════════════
+// ── Wire up event listeners ──
+// ══════════════════════════════
+
+// Mouse
+var cz=document.getElementById('click-zone');
+['click','dblclick','mousedown','mouseup','mouseenter','mouseleave','contextmenu','auxclick'].forEach(t=>{
+  cz.addEventListener(t, e=>{ if(t==='contextmenu')e.preventDefault(); log(e); });
+});
+cz.addEventListener('mousemove', e=>log(e));
+
+// Keyboard
+var ki=document.getElementById('key-input');
+['keydown','keyup','keypress','input','compositionstart','compositionend','compositionupdate'].forEach(t=>{
+  ki.addEventListener(t, e=>log(e));
+});
+
+// Form
+var fm=document.getElementById('test-form');
+['f-text','f-num','f-sel','f-range','f-chk','f-rad','f-ta'].forEach(id=>{
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.addEventListener('change',e=>log(e));
+  el.addEventListener('beforeinput',e=>log(e));
+  if(['f-text','f-num','f-ta'].includes(id)) el.addEventListener('input',e=>log(e));
+});
+fm.addEventListener('submit',e=>{e.preventDefault();log(e);});
+fm.addEventListener('reset',e=>log(e));
+
+// Drag
+var dEl=document.getElementById('draggable-el'), dTgt=document.getElementById('drop-target');
+['dragstart','drag','dragend'].forEach(t=>dEl.addEventListener(t,e=>log(e)));
+['dragenter','dragover','dragleave','drop'].forEach(t=>dTgt.addEventListener(t,e=>{e.preventDefault();log(e);}));
+dTgt.addEventListener('dragenter',()=>dTgt.classList.add('over'));
+dTgt.addEventListener('dragleave',()=>dTgt.classList.remove('over'));
+dTgt.addEventListener('drop',()=>dTgt.classList.remove('over'));
+
+// Focus
+['fo-a','fo-b','fo-c'].forEach(id=>{
+  var el=document.getElementById(id);
+  if(el)['focus','blur','focusin','focusout'].forEach(t=>el.addEventListener(t,e=>log(e)));
+});
+
+// Scroll & Wheel
+document.getElementById('scroll-area').addEventListener('scroll',e=>log(e));
+document.getElementById('wheel-target').addEventListener('wheel',e=>{e.preventDefault();log(e);},{passive:false});
+
+// Clipboard
+var ci=document.getElementById('clip-in');
+['copy','cut','paste'].forEach(t=>ci.addEventListener(t,e=>log(e)));
+document.getElementById('cp-btn').onclick=()=>{ci.select();document.execCommand('copy');};
+document.getElementById('ct-btn').onclick=()=>{ci.select();document.execCommand('cut');};
+
+// Pointer + Canvas
+var pw=document.getElementById('ptr-wrap'), pcv=document.getElementById('ptr-cv'), pctx, pdraw=false;
+function initCv(){pcv.width=pw.offsetWidth;pcv.height=pw.offsetHeight;pctx=pcv.getContext('2d');}
+initCv();
+['pointerdown','pointerup','pointermove','pointerenter','pointerleave','pointercancel'].forEach(t=>{
+  pw.addEventListener(t,e=>{
+    log(e);
+    if(t==='pointerdown'){pdraw=true;pctx.beginPath();pctx.moveTo(e.offsetX,e.offsetY);}
+    if(t==='pointermove'&&pdraw){pctx.strokeStyle='rgba(139,92,246,0.5)';pctx.lineWidth=2;pctx.lineTo(e.offsetX,e.offsetY);pctx.stroke();}
+    if(t==='pointerup'||t==='pointercancel')pdraw=false;
+  });
+});
+pw.addEventListener('dblclick',()=>pctx.clearRect(0,0,pcv.width,pcv.height));
+['gotpointercapture','lostpointercapture'].forEach(t=>pw.addEventListener(t,e=>log(e)));
+
+// Touch
+var tp=document.getElementById('touch-pad');
+['touchstart','touchend','touchcancel','touchmove'].forEach(t=>tp.addEventListener(t,e=>log(e)));
+
+// Selection
+document.addEventListener('selectstart',e=>log(e));
+document.addEventListener('selectionchange',e=>log(e));
+
+// ContentEditable
+var eb=document.getElementById('edit-box');
+['input','keydown','keyup','focus','blur'].forEach(t=>eb.addEventListener(t,e=>log(e)));
+
+// Animation
+var ae=document.getElementById('anim-el');
+['animationstart','animationend','animationiteration','animationcancel'].forEach(t=>ae.addEventListener(t,e=>log(e)));
+['transitionstart','transitionend','transitioncancel','transitionrun'].forEach(t=>ae.addEventListener(t,e=>log(e)));
+
+// Media
+var au=document.getElementById('aud');
+['play','pause','playing','ended','timeupdate','durationchange','volumechange','ratechange','seeking','seeked',
+ 'loadstart','progress','suspend','canplay','canplaythrough','loadeddata','loadedmetadata'].forEach(t=>au.addEventListener(t,e=>log(e)));
+
+// Resize
+new ResizeObserver(()=>log({type:'resize',target:window},'resize')).observe(document.getElementById('rsz-box'));
+window.addEventListener('resize',e=>{log(e,'resize');initCv();});
+
+// Toggle
+document.getElementById('det-el').addEventListener('toggle',e=>log(e));
+
+// Navigation
+['hashchange','popstate','pagehide','pageshow'].forEach(t=>window.addEventListener(t,e=>log(e)));
+
+// Network
+window.addEventListener('online',e=>{log(e);document.getElementById('ns').textContent='Online';document.getElementById('nd').className='sdot on';});
+window.addEventListener('offline',e=>{log(e);document.getElementById('ns').textContent='Offline';document.getElementById('nd').className='sdot off';});
+
+// Visibility
+document.addEventListener('visibilitychange',e=>{
+  log(e); var h=document.hidden;
+  document.getElementById('vs').textContent=h?'Hidden':'Visible';
+  document.getElementById('vd').className='sdot '+(h?'off':'on');
+});
+
+// Window
+window.addEventListener('load',e=>log(e));
+window.addEventListener('beforeunload',e=>log(e));
+window.addEventListener('beforeprint',e=>log(e));
+window.addEventListener('afterprint',e=>log(e));
+window.addEventListener('storage',e=>log(e));
+window.addEventListener('message',e=>log(e));
+window.addEventListener('unhandledrejection',e=>log(e,'other'));
+window.addEventListener('gamepadconnected',e=>log(e));
+document.addEventListener('fullscreenchange',e=>log(e));
+
+log({type:'ready',target:window},'other');
+</script>
+</body>
+</html>

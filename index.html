@@ -199,6 +199,209 @@
   .detail-el summary { padding: 8px 10px; cursor: pointer; font-size: 0.68rem; color: var(--text2); font-family: var(--mono); }
   .detail-el .det-body { padding: 8px 10px; border-top: 1px solid var(--border); font-size: 0.62rem; color: var(--text4); font-family: var(--mono); }
 
+  /* ── Chart ── */
+  .chart-wrap { display: flex; align-items: flex-end; gap: 6px; height: 100px; padding: 8px 4px 4px; border: 1px solid var(--border); border-radius: var(--radius-xs); background: var(--bg2); }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bar {
+    width: 100%; border-radius: 4px 4px 0 0; cursor: pointer; transition: opacity 0.15s, transform 0.15s;
+    position: relative; min-height: 8px;
+  }
+  .bar:hover { opacity: 0.8; transform: scaleY(1.05); transform-origin: bottom; }
+  .bar-label { font-family: var(--mono); font-size: 0.5rem; color: var(--text4); }
+  .chart-tip {
+    position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    background: var(--surface3); border: 1px solid var(--border); border-radius: 4px;
+    padding: 3px 7px; font-family: var(--mono); font-size: 0.52rem; color: var(--text);
+    white-space: nowrap; pointer-events: none; display: none; z-index: 5;
+  }
+  .bar:hover .chart-tip { display: block; }
+
+  /* ── Links ── */
+  .links-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .test-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: var(--radius-xs);
+    background: var(--bg2); color: var(--accent); font-family: var(--mono); font-size: 0.65rem;
+    text-decoration: none; cursor: pointer; transition: all 0.15s;
+  }
+  .test-link:hover { background: var(--accent-glow); border-color: var(--accent2); }
+  .test-link:visited { color: var(--purple); }
+  .test-link .arrow { font-size: 0.55rem; opacity: 0.5; }
+
+  /* ── Multi-select ── */
+  .msel-row { display: flex; gap: 10px; align-items: flex-start; }
+  .msel-native { flex: 1; }
+  select[multiple].field {
+    height: 80px; padding: 4px; appearance: auto; background-image: none;
+  }
+  select[multiple].field option { padding: 4px 8px; border-radius: 3px; font-family: var(--mono); font-size: 0.65rem; }
+  select[multiple].field option:checked { background: var(--accent-glow); color: var(--accent); }
+  .msel-custom { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .msel-item {
+    display: flex; align-items: center; gap: 8px; padding: 5px 10px;
+    border: 1px solid var(--border); border-radius: var(--radius-xs); background: var(--bg2);
+    cursor: pointer; transition: all 0.15s; font-family: var(--mono); font-size: 0.65rem; color: var(--text2);
+  }
+  .msel-item:hover { border-color: var(--border2); }
+  .msel-item.checked { border-color: var(--accent2); background: var(--accent-glow); color: var(--accent); }
+  .msel-item input { accent-color: var(--accent); width: 14px; height: 14px; pointer-events: none; }
+  .msel-label { font-size: 0.55rem; color: var(--text4); font-family: var(--mono); margin-bottom: 4px; }
+
+  /* ── Widgets ── */
+  .widget-grid { display: flex; flex-direction: column; gap: 8px; }
+
+  .w-accordion { border: 1px solid var(--border); border-radius: var(--radius-xs); overflow: hidden; }
+  .w-accordion-item { border-bottom: 1px solid var(--border); }
+  .w-accordion-item:last-child { border-bottom: none; }
+  .w-acc-head {
+    padding: 8px 12px; background: var(--bg2); cursor: pointer; display: flex; align-items: center;
+    justify-content: space-between; font-family: var(--mono); font-size: 0.65rem; color: var(--text2);
+    transition: background 0.15s; user-select: none;
+  }
+  .w-acc-head:hover { background: var(--surface3); }
+  .w-acc-head .arr { font-size: 0.6rem; transition: transform 0.2s; color: var(--text4); }
+  .w-acc-head.open .arr { transform: rotate(90deg); }
+  .w-acc-body { padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.25s ease, padding 0.25s ease; font-family: var(--mono); font-size: 0.6rem; color: var(--text3); background: var(--surface); }
+  .w-acc-body.open { max-height: 80px; padding: 8px 12px; }
+
+  .w-tabs-bar { display: flex; gap: 2px; background: var(--bg2); border-radius: var(--radius-xs); padding: 3px; border: 1px solid var(--border); }
+  .w-tab {
+    padding: 5px 14px; border-radius: 4px; border: none; background: transparent;
+    color: var(--text3); font-family: var(--mono); font-size: 0.62rem; cursor: pointer; transition: all 0.12s;
+  }
+  .w-tab:hover { color: var(--text2); }
+  .w-tab.active { background: var(--surface3); color: var(--text); }
+  .w-tab-content { padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-xs); margin-top: 6px; font-family: var(--mono); font-size: 0.62rem; color: var(--text3); background: var(--bg2); min-height: 36px; }
+
+  .w-modal-trigger {
+    padding: 7px 16px; background: var(--accent2); border: none; border-radius: var(--radius-xs);
+    color: white; font-family: var(--sans); font-size: 0.65rem; font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+  }
+  .w-modal-trigger:hover { opacity: 0.85; }
+  dialog.w-dialog {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    color: var(--text); padding: 0; width: min(360px, 90vw); box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    font-family: var(--sans);
+  }
+  dialog.w-dialog::backdrop { background: rgba(0,0,0,0.5); }
+  .w-dialog-head { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .w-dialog-head h4 { font-size: 0.78rem; font-weight: 600; }
+  .w-dialog-close { background: none; border: none; color: var(--text3); font-size: 1.1rem; cursor: pointer; line-height: 1; }
+  .w-dialog-close:hover { color: var(--text); }
+  .w-dialog-body { padding: 18px; font-size: 0.72rem; color: var(--text2); line-height: 1.6; }
+  .w-dialog-foot { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+  .w-dialog-foot button { padding: 6px 14px; border-radius: var(--radius-xs); font-family: var(--sans); font-size: 0.65rem; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
+  .w-btn-cancel { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); }
+  .w-btn-confirm { background: var(--accent2); border: none; color: white; }
+
+  .w-tooltip-wrap { position: relative; display: inline-block; }
+  .w-tooltip-target {
+    padding: 6px 14px; border: 1px solid var(--border); border-radius: var(--radius-xs);
+    background: var(--bg2); color: var(--text2); font-family: var(--mono); font-size: 0.65rem;
+    cursor: default; transition: all 0.15s;
+  }
+  .w-tooltip-target:hover { border-color: var(--accent); color: var(--accent); }
+  .w-tooltip-box {
+    position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    background: var(--surface3); border: 1px solid var(--border2); border-radius: var(--radius-xs);
+    padding: 6px 10px; font-family: var(--mono); font-size: 0.58rem; color: var(--text);
+    white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.15s;
+    box-shadow: var(--shadow, 0 4px 12px rgba(0,0,0,0.2));
+  }
+  .w-tooltip-box::after {
+    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent; border-top-color: var(--surface3);
+  }
+  .w-tooltip-wrap:hover .w-tooltip-box { opacity: 1; }
+
+  /* ── File Upload ── */
+  .upload-zone {
+    border: 1.5px dashed var(--border); border-radius: var(--radius-xs); padding: 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    background: var(--bg2); transition: all 0.15s; cursor: pointer;
+  }
+  .upload-zone:hover { border-color: var(--accent); background: var(--accent-glow); }
+  .upload-zone .upload-icon { font-size: 1.2rem; opacity: 0.5; }
+  .upload-zone .upload-text { font-family: var(--mono); font-size: 0.62rem; color: var(--text3); }
+  .upload-zone input[type="file"] { display: none; }
+  .upload-result { margin-top: 6px; font-family: var(--mono); font-size: 0.58rem; color: var(--emerald); min-height: 18px; }
+
+  /* ── Keyboard Combos ── */
+  .combo-display {
+    padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-xs);
+    background: var(--bg2); font-family: var(--mono); font-size: 0.72rem; color: var(--text);
+    min-height: 40px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .key-badge {
+    display: inline-flex; padding: 3px 8px; border: 1px solid var(--border2); border-radius: 4px;
+    background: var(--surface3); font-size: 0.6rem; font-weight: 600; color: var(--text2);
+    min-width: 24px; justify-content: center;
+  }
+  .key-badge.mod { background: var(--accent-glow); border-color: var(--accent2); color: var(--accent); }
+  .combo-hint { font-family: var(--mono); font-size: 0.52rem; color: var(--text4); margin-top: 6px; }
+
+  /* ── Navigation (Back/Forward/SPA) ── */
+  .nav-btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .nav-action-btn {
+    padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--radius-xs);
+    background: var(--bg2); color: var(--text2); font-family: var(--mono); font-size: 0.65rem;
+    cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px;
+  }
+  .nav-action-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+  .nav-history { margin-top: 8px; font-family: var(--mono); font-size: 0.55rem; color: var(--text4); min-height: 18px; }
+
+  /* ── iframe ── */
+  .iframe-container { border: 1px solid var(--border); border-radius: var(--radius-xs); overflow: hidden; }
+  .iframe-container iframe { width: 100%; height: 120px; border: none; display: block; background: var(--bg2); }
+
+  /* ── Shadow DOM ── */
+  .shadow-host { border: 1px solid var(--border); border-radius: var(--radius-xs); background: var(--bg2); padding: 14px; min-height: 60px; }
+
+  /* ── Dynamic Content ── */
+  .dynamic-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .dynamic-controls { display: flex; gap: 6px; flex-wrap: wrap; }
+  .dynamic-btn {
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: var(--radius-xs);
+    background: var(--bg2); color: var(--text2); font-family: var(--mono); font-size: 0.62rem;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dynamic-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .dynamic-stage {
+    border: 1px solid var(--border); border-radius: var(--radius-xs); background: var(--bg2);
+    padding: 12px; min-height: 50px; position: relative;
+  }
+  .dynamic-el { padding: 8px 12px; border-radius: var(--radius-xs); font-family: var(--mono); font-size: 0.62rem; transition: all 0.3s; }
+  .dynamic-el.appear { animation: fadeIn 0.3s ease; }
+
+  .spinner-el {
+    width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .skeleton-el {
+    height: 14px; border-radius: 4px; background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* ── Selector Playground ── */
+  .sel-playground { display: flex; flex-direction: column; gap: 8px; }
+  .sel-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sel-target {
+    padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius-xs);
+    background: var(--bg2); font-family: var(--mono); font-size: 0.62rem; color: var(--text2);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .sel-target:hover { border-color: var(--accent); }
+  .sel-target:active { background: var(--accent-glow); }
+  .sel-dup-row { display: flex; gap: 4px; }
+  .sel-dup {
+    flex: 1; padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius-xs);
+    background: var(--bg2); font-family: var(--mono); font-size: 0.58rem; color: var(--text3);
+    cursor: pointer; text-align: center; transition: all 0.15s;
+  }
+  .sel-dup:hover { border-color: var(--accent); color: var(--accent); }
+
   /* ── Log panel (right) ── */
   .log { background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
 
@@ -265,6 +468,8 @@
       <button class="nav-pill active" onclick="showAll()">All</button>
       <button class="nav-pill" onclick="showGroup('interaction')">Interaction</button>
       <button class="nav-pill" onclick="showGroup('input')">Input</button>
+      <button class="nav-pill" onclick="showGroup('widget')">Widgets</button>
+      <button class="nav-pill" onclick="showGroup('automation')">Automation</button>
       <button class="nav-pill" onclick="showGroup('system')">System</button>
     </div>
   </div>
@@ -315,6 +520,16 @@ const CATS = [
   { id:'nav',     label:'navigation', c:'248,113,113', group:'system' },
   { id:'network', label:'network',    c:'96,165,250',  group:'system' },
   { id:'resize',  label:'resize',     c:'45,212,191',  group:'system' },
+  { id:'widget',  label:'widget',     c:'251,191,36',  group:'widget' },
+  { id:'link',    label:'link',       c:'96,165,250',  group:'widget' },
+  { id:'chart',   label:'chart',      c:'52,211,153',  group:'widget' },
+  { id:'upload',  label:'upload',     c:'251,146,60',  group:'automation' },
+  { id:'combo',   label:'combos',     c:'167,139,250', group:'automation' },
+  { id:'histnav', label:'history',    c:'248,113,113', group:'automation' },
+  { id:'iframe',  label:'iframe',     c:'96,165,250',  group:'automation' },
+  { id:'shadow',  label:'shadow-dom', c:'232,121,249', group:'automation' },
+  { id:'dynamic', label:'dynamic',    c:'52,211,153',  group:'automation' },
+  { id:'seltest', label:'selectors',  c:'251,191,36',  group:'automation' },
   { id:'other',   label:'other',      c:'148,163,184', group:'system' },
 ];
 const CC = {}; CATS.forEach(c => CC[c.id] = c.c);
@@ -477,22 +692,23 @@ function showGroup(g) {
 // ── Build tiles ──
 const bento = document.getElementById('bento');
 
+var _tileUid=0;
 function tile(cat, title, icon, group, bodyHTML, opts={}) {
+  var uid='tile-actions-'+(++_tileUid);
   const t=document.createElement('div');
   t.className='tile'+(opts.span2?' span-2':'');
   t.dataset.group=group||'';
   const color=CC[cat]||'148,163,184';
   t.style.setProperty('--tc','rgb('+color+')');
-  t.innerHTML='<div class="tile-head"><div class="tile-title"><span class="icon">'+icon+'</span><span>'+title+'</span></div><div class="tile-actions" id="actions-'+cat+'"></div></div>';
+  t.innerHTML='<div class="tile-head"><div class="tile-title"><span class="icon">'+icon+'</span><span>'+title+'</span></div><div class="tile-actions" id="'+uid+'"></div></div>';
   const body=document.createElement('div'); body.className='tile-body';
   if(typeof bodyHTML==='string') body.innerHTML=bodyHTML; else body.appendChild(bodyHTML);
   t.appendChild(body);
-  // flash glow
   t.style.cssText+='--tc-glow:rgba('+color+',0.08);';
   t.querySelector('.tile-head').style.borderBottomColor='rgba('+color+',0.1)';
   tileFlash[cat]=t;
   bento.appendChild(t);
-  return {tile:t, body:body, actions:document.getElementById('actions-'+cat)};
+  return {tile:t, body:body, actions:document.getElementById(uid)};
 }
 
 function addHF(actionsEl, events, label) {
@@ -549,6 +765,203 @@ addHF(se.actions,['selectionchange'],'selectionchange');
 
 // ContentEditable
 tile('key','ContentEditable','\u270F','input','<div id="edit-box" class="editable" contenteditable="true">Edit me \u2014 input, keydown, selection events</div>');
+
+// ── Chart (SVG bar chart) ──
+tile('chart','Bar Chart','\u{1F4CA}','widget',
+  '<div class="chart-wrap" id="chart-zone"></div>'+
+  '<div style="margin-top:6px;font-family:var(--mono);font-size:0.55rem;color:var(--text4)">Click or hover bars \u2014 logs mouse, click, mouseenter, mouseleave</div>',
+  {span2:true});
+
+// ── Links ──
+tile('link','Links (new tab)','\u{1F517}','widget',
+  '<div class="links-grid">'+
+  '<a class="test-link" id="lnk-1" href="https://example.com" target="_blank" rel="noopener">example.com <span class="arrow">\u2197</span></a>'+
+  '<a class="test-link" id="lnk-2" href="https://developer.mozilla.org" target="_blank" rel="noopener">MDN Docs <span class="arrow">\u2197</span></a>'+
+  '<a class="test-link" id="lnk-3" href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia <span class="arrow">\u2197</span></a>'+
+  '<a class="test-link" id="lnk-4" href="#section-test">Hash link (#)</a>'+
+  '<a class="test-link" id="lnk-5" href="javascript:void(0)">JS void link</a>'+
+  '</div>'+
+  '<div style="margin-top:6px;font-family:var(--mono);font-size:0.55rem;color:var(--text4)">click, auxclick (middle-click), contextmenu on links</div>');
+
+// ── Multi-Select ──
+tile('form','Multi-Select','\u2611','widget',
+  '<div class="msel-row">'+
+    '<div class="msel-native">'+
+      '<div class="msel-label">native &lt;select multiple&gt;</div>'+
+      '<select multiple class="field" id="msel-native"><option value="react">React</option><option value="vue">Vue</option><option value="angular">Angular</option><option value="svelte">Svelte</option><option value="solid">Solid</option></select>'+
+    '</div>'+
+    '<div class="msel-custom">'+
+      '<div class="msel-label">custom checkbox group</div>'+
+      '<label class="msel-item" data-val="js"><input type="checkbox" name="msel" value="js">JavaScript</label>'+
+      '<label class="msel-item" data-val="ts"><input type="checkbox" name="msel" value="ts">TypeScript</label>'+
+      '<label class="msel-item" data-val="py"><input type="checkbox" name="msel" value="py">Python</label>'+
+      '<label class="msel-item" data-val="go"><input type="checkbox" name="msel" value="go">Go</label>'+
+    '</div>'+
+  '</div>');
+
+// ── Widgets: Accordion + Tabs + Modal + Tooltip ──
+tile('widget','Widgets','\u{1F9E9}','widget',
+  '<div class="widget-grid">'+
+    // Accordion
+    '<div class="w-accordion" id="w-accordion">'+
+      '<div class="w-accordion-item"><div class="w-acc-head" data-idx="0">Accordion Item 1 <span class="arr">\u25B6</span></div><div class="w-acc-body" data-idx="0">Content panel 1 \u2014 click, focus, toggle events logged.</div></div>'+
+      '<div class="w-accordion-item"><div class="w-acc-head" data-idx="1">Accordion Item 2 <span class="arr">\u25B6</span></div><div class="w-acc-body" data-idx="1">Content panel 2 \u2014 each open/close fires events.</div></div>'+
+      '<div class="w-accordion-item"><div class="w-acc-head" data-idx="2">Accordion Item 3 <span class="arr">\u25B6</span></div><div class="w-acc-body" data-idx="2">Content panel 3 \u2014 click to toggle.</div></div>'+
+    '</div>'+
+    // Tabs
+    '<div>'+
+      '<div class="w-tabs-bar" id="w-tabs-bar">'+
+        '<button class="w-tab active" data-tab="0">Tab A</button>'+
+        '<button class="w-tab" data-tab="1">Tab B</button>'+
+        '<button class="w-tab" data-tab="2">Tab C</button>'+
+      '</div>'+
+      '<div class="w-tab-content" id="w-tab-content">Tab A content \u2014 click events on tab switches.</div>'+
+    '</div>'+
+    // Modal trigger + Tooltip
+    '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">'+
+      '<button class="w-modal-trigger" id="w-modal-open">Open Modal</button>'+
+      '<div class="w-tooltip-wrap"><span class="w-tooltip-target">Hover for tooltip</span><div class="w-tooltip-box">Tooltip: mouseenter, mouseleave, hover events</div></div>'+
+    '</div>'+
+  '</div>'+
+  // Dialog element (hidden)
+  '<dialog class="w-dialog" id="w-dialog">'+
+    '<div class="w-dialog-head"><h4>Modal Dialog</h4><button class="w-dialog-close" id="w-dialog-x">\u00d7</button></div>'+
+    '<div class="w-dialog-body">This is a native <code>&lt;dialog&gt;</code> element.<br>Events: click, close, cancel (Esc), focus, blur.</div>'+
+    '<div class="w-dialog-foot"><button class="w-btn-cancel" id="w-dialog-cancel">Cancel</button><button class="w-btn-confirm" id="w-dialog-confirm">Confirm</button></div>'+
+  '</dialog>',
+  {span2:true});
+
+// ══════════════════════════════════════
+// ── Automation Testing Tiles ──
+// ══════════════════════════════════════
+
+// File Upload
+tile('upload','File Upload','\u{1F4C1}','automation',
+  '<div class="upload-zone" id="upload-zone" onclick="document.getElementById(\'file-input\').click()">'+
+    '<span class="upload-icon">\u2B06</span>'+
+    '<span class="upload-text">Click to upload or drag file here</span>'+
+    '<input type="file" id="file-input" multiple accept="*/*">'+
+  '</div>'+
+  '<div class="upload-result" id="upload-result"></div>');
+
+// Keyboard Combos
+tile('combo','Keyboard Combos','\u{2328}','automation',
+  '<div class="combo-display" id="combo-zone" tabindex="0" style="outline:none;cursor:text">'+
+    '<span style="color:var(--text4);font-size:0.62rem">Click here, then press Ctrl+C, Shift+Click, Alt+Tab, etc.</span>'+
+  '</div>'+
+  '<div class="combo-hint">Modifier keys shown in purple. Try: Ctrl+A, Ctrl+C, Ctrl+V, Shift+Enter, Alt+F4</div>');
+
+// Navigation (Back/Forward/SPA)
+tile('histnav','Navigation History','\u{1F9ED}','automation',
+  '<div class="nav-btn-row">'+
+    '<button class="nav-action-btn" id="nav-back">\u2190 Back</button>'+
+    '<button class="nav-action-btn" id="nav-forward">\u2192 Forward</button>'+
+    '<button class="nav-action-btn" id="nav-push">pushState</button>'+
+    '<button class="nav-action-btn" id="nav-replace">replaceState</button>'+
+    '<button class="nav-action-btn" id="nav-hash">#hash</button>'+
+    '<button class="nav-action-btn" id="nav-reload">\u21BB Reload (logs beforeunload)</button>'+
+  '</div>'+
+  '<div class="nav-history" id="nav-history">History length: '+history.length+'</div>');
+
+// iframe
+tile('iframe','iframe Interaction','\u{1F5BC}','automation',
+  '<div class="iframe-container"><iframe id="test-iframe" srcdoc="'+
+    '<!DOCTYPE html><html><head><style>'+
+      '*{margin:0;padding:0;box-sizing:border-box;font-family:monospace}'+
+      'body{background:#1a1d27;color:#a1a1aa;padding:10px;font-size:12px}'+
+      'button{padding:6px 12px;background:#6366f1;color:white;border:none;border-radius:4px;cursor:pointer;font-size:11px;margin:4px}'+
+      'button:hover{opacity:0.8}'+
+      'input{padding:5px 8px;background:#22252f;border:1px solid #3f3f46;border-radius:4px;color:#e4e6eb;font-size:11px;margin:4px;outline:none}'+
+      'select{padding:5px 8px;background:#22252f;border:1px solid #3f3f46;border-radius:4px;color:#e4e6eb;font-size:11px;margin:4px}'+
+      '.label{color:#71717a;font-size:10px;margin-bottom:4px}'+
+    '</style></head><body>'+
+      '<div class=label>Inside iframe \u2014 same-origin interactive elements</div>'+
+      '<button id=iframe-btn onclick=this.textContent=&quot;Clicked!&quot;>Click me</button>'+
+      '<input id=iframe-input placeholder=&quot;type here&quot;>'+
+      '<select id=iframe-sel><option>Pick</option><option>A</option><option>B</option></select>'+
+      '<button id=iframe-btn2 onclick=document.getElementById(&quot;iframe-input&quot;).value=&quot;filled&quot;>Fill input</button>'+
+    '</body></html>'+
+  '"></iframe></div>'+
+  '<div style="margin-top:6px;font-family:var(--mono);font-size:0.52rem;color:var(--text4)">Same-origin iframe with button, input, select \u2014 test extension\'s iframe traversal</div>');
+
+// Shadow DOM
+tile('shadow','Shadow DOM','\u{1F47B}','automation',
+  '<div id="shadow-host" class="shadow-host"></div>'+
+  '<div style="margin-top:6px;font-family:var(--mono);font-size:0.52rem;color:var(--text4)">Elements inside shadow root \u2014 tests extension\'s shadow DOM support</div>');
+
+// Dynamic Content
+tile('dynamic','Dynamic Content','\u{26A1}','automation',
+  '<div class="dynamic-wrap">'+
+    '<div class="dynamic-controls">'+
+      '<button class="dynamic-btn" id="dyn-show">Show element</button>'+
+      '<button class="dynamic-btn" id="dyn-hide">Hide element</button>'+
+      '<button class="dynamic-btn" id="dyn-toggle">Toggle visibility</button>'+
+      '<button class="dynamic-btn" id="dyn-lazy">Lazy load (2s)</button>'+
+      '<button class="dynamic-btn" id="dyn-spinner">Show spinner</button>'+
+      '<button class="dynamic-btn" id="dyn-skeleton">Show skeleton</button>'+
+      '<button class="dynamic-btn" id="dyn-swap">Swap content</button>'+
+      '<button class="dynamic-btn" id="dyn-reset">Reset</button>'+
+    '</div>'+
+    '<div class="dynamic-stage" id="dyn-stage">'+
+      '<div class="dynamic-el" id="dyn-target" style="background:var(--accent-glow);color:var(--accent)">Target element \u2014 visible</div>'+
+    '</div>'+
+  '</div>',
+  {span2:true});
+
+// Selector Playground
+tile('seltest','Selector Playground','\u{1F3AF}','automation',
+  '<div class="sel-playground">'+
+    '<div style="font-family:var(--mono);font-size:0.52rem;color:var(--text4);margin-bottom:4px">Elements with various selector attributes \u2014 tests extension\'s selector strategy</div>'+
+    '<div class="sel-row">'+
+      '<div class="sel-target" data-testid="submit-order" id="sel-testid">data-testid="submit-order"</div>'+
+      '<div class="sel-target" aria-label="Close dialog" id="sel-aria">aria-label="Close dialog"</div>'+
+      '<div class="sel-target" id="unique-stable-id">id="unique-stable-id"</div>'+
+    '</div>'+
+    '<div class="sel-row">'+
+      '<button class="sel-target" id="sel-text-btn">Button with text content</button>'+
+      '<a class="sel-target" href="javascript:void(0)" id="sel-link-text">Link with text</a>'+
+      '<span class="sel-target" aria-describedby="sel-desc" id="sel-described">aria-describedby</span>'+
+      '<span id="sel-desc" hidden>Description for this element</span>'+
+    '</div>'+
+    '<div style="font-family:var(--mono);font-size:0.52rem;color:var(--text4);margin:6px 0 2px">Dynamic/framework IDs (should be deprioritized):</div>'+
+    '<div class="sel-row">'+
+      '<div class="sel-target" id="react-select-123-option">react-select-123-option</div>'+
+      '<div class="sel-target" id=":r4:">id=":r4:" (React)</div>'+
+      '<div class="sel-target" id="radix-:abc:" class="px-4 flex bg-white">radix + Tailwind classes</div>'+
+    '</div>'+
+    '<div style="font-family:var(--mono);font-size:0.52rem;color:var(--text4);margin:6px 0 2px">Duplicate selectors (multiple matches for same class):</div>'+
+    '<div class="sel-dup-row">'+
+      '<div class="sel-dup dup-item">item 1</div>'+
+      '<div class="sel-dup dup-item">item 2</div>'+
+      '<div class="sel-dup dup-item">item 3</div>'+
+      '<div class="sel-dup dup-item">item 4</div>'+
+      '<div class="sel-dup dup-item">item 5</div>'+
+    '</div>'+
+    '<div style="font-family:var(--mono);font-size:0.52rem;color:var(--text4);margin:6px 0 2px">Nested elements (tests ancestor CSS path):</div>'+
+    '<div style="border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--bg2);padding:8px">'+
+      '<div style="padding:4px"><div style="padding:4px"><div style="padding:4px">'+
+        '<button class="sel-target" id="deep-nested-btn" data-testid="deep-action">Deeply nested button</button>'+
+      '</div></div></div>'+
+    '</div>'+
+  '</div>',
+  {span2:true});
+
+// Loading States
+tile('dynamic','Loading States','\u{23F3}','automation',
+  '<div style="display:flex;flex-direction:column;gap:8px">'+
+    '<div style="display:flex;align-items:center;gap:10px">'+
+      '<div class="spinner-el" id="loading-spinner"></div>'+
+      '<span style="font-family:var(--mono);font-size:0.62rem;color:var(--text3)">.spinner class \u2014 extension detects as loading indicator</span>'+
+    '</div>'+
+    '<div>'+
+      '<div class="skeleton-el loading" style="width:60%;margin-bottom:6px" id="loading-skel-1"></div>'+
+      '<div class="skeleton-el loading" style="width:40%" id="loading-skel-2"></div>'+
+      '<span style="font-family:var(--mono);font-size:0.52rem;color:var(--text4)">.loading class \u2014 extension waits for these to disappear</span>'+
+    '</div>'+
+    '<div aria-busy="true" id="busy-zone" style="padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--bg2);font-family:var(--mono);font-size:0.62rem;color:var(--text3)">'+
+      '[aria-busy="true"] \u2014 extension checks this attribute'+
+    '</div>'+
+  '</div>');
 
 // Animation
 const an = tile('anim','Animation','\u{1F3AC}','system','<div class="anim-stage"><div id="anim-el"></div></div>');
@@ -654,6 +1067,300 @@ document.addEventListener('selectionchange',e=>log(e));
 // ContentEditable
 var eb=document.getElementById('edit-box');
 ['input','keydown','keyup','focus','blur'].forEach(t=>eb.addEventListener(t,e=>log(e)));
+
+// ── Chart ──
+(function(){
+  var cz=document.getElementById('chart-zone');
+  var data=[
+    {label:'Mon',val:65,color:'var(--accent)'},
+    {label:'Tue',val:40,color:'var(--purple)'},
+    {label:'Wed',val:85,color:'var(--pink)'},
+    {label:'Thu',val:55,color:'var(--cyan)'},
+    {label:'Fri',val:90,color:'var(--emerald)'},
+    {label:'Sat',val:30,color:'var(--orange)'},
+    {label:'Sun',val:70,color:'var(--rose)'}
+  ];
+  data.forEach(function(d){
+    var col=document.createElement('div'); col.className='bar-col';
+    var bar=document.createElement('div'); bar.className='bar';
+    bar.style.height=d.val+'%'; bar.style.background=d.color;
+    var tip=document.createElement('div'); tip.className='chart-tip'; tip.textContent=d.label+': '+d.val;
+    bar.appendChild(tip);
+    var lbl=document.createElement('div'); lbl.className='bar-label'; lbl.textContent=d.label;
+    col.appendChild(bar); col.appendChild(lbl); cz.appendChild(col);
+    ['click','mouseenter','mouseleave','mousedown','mouseup'].forEach(function(t){
+      bar.addEventListener(t,function(e){ log(e,'chart'); });
+    });
+  });
+})();
+
+// ── Links ──
+document.querySelectorAll('.test-link').forEach(function(a){
+  ['click','auxclick','contextmenu','mousedown','mouseup','focus','blur'].forEach(function(t){
+    a.addEventListener(t,function(e){
+      log(e,'link');
+    });
+  });
+});
+
+// ── Multi-Select ──
+var mselNative=document.getElementById('msel-native');
+['change','click','focus','blur','mousedown'].forEach(function(t){
+  mselNative.addEventListener(t,function(e){ log(e); });
+});
+document.querySelectorAll('.msel-item').forEach(function(item){
+  item.addEventListener('click',function(e){
+    var cb=item.querySelector('input');
+    // let native checkbox handle the toggle
+    setTimeout(function(){
+      item.classList.toggle('checked',cb.checked);
+      log(e);
+    },0);
+  });
+  item.querySelector('input').addEventListener('change',function(e){ log(e); });
+});
+
+// ── Widgets: Accordion ──
+document.querySelectorAll('.w-acc-head').forEach(function(head){
+  head.addEventListener('click',function(e){
+    var idx=head.dataset.idx;
+    var body=document.querySelector('.w-acc-body[data-idx="'+idx+'"]');
+    var wasOpen=head.classList.contains('open');
+    head.classList.toggle('open');
+    body.classList.toggle('open');
+    log(e,'widget');
+    // Also log a synthetic toggle
+    log({type: wasOpen?'accordion-close':'accordion-open', target:head},'widget');
+  });
+});
+
+// ── Widgets: Tabs ──
+var tabContents=['Tab A content \u2014 click events on tab switches.','Tab B content \u2014 each switch fires click + focus.','Tab C content \u2014 observe event sequence.'];
+document.querySelectorAll('.w-tab').forEach(function(tab){
+  tab.addEventListener('click',function(e){
+    document.querySelectorAll('.w-tab').forEach(function(t){t.classList.remove('active');});
+    tab.classList.add('active');
+    document.getElementById('w-tab-content').textContent=tabContents[tab.dataset.tab];
+    log(e,'widget');
+  });
+  tab.addEventListener('focus',function(e){ log(e,'widget'); });
+  tab.addEventListener('blur',function(e){ log(e,'widget'); });
+});
+
+// ── Widgets: Modal ──
+var dlg=document.getElementById('w-dialog');
+document.getElementById('w-modal-open').addEventListener('click',function(e){
+  log(e,'widget');
+  dlg.showModal();
+});
+dlg.addEventListener('close',function(e){ log(e,'widget'); });
+dlg.addEventListener('cancel',function(e){ log(e,'widget'); });
+dlg.addEventListener('click',function(e){ log(e,'widget'); });
+document.getElementById('w-dialog-x').addEventListener('click',function(){ dlg.close(); });
+document.getElementById('w-dialog-cancel').addEventListener('click',function(){ dlg.close(); });
+document.getElementById('w-dialog-confirm').addEventListener('click',function(e){
+  log(e,'widget');
+  dlg.close('confirmed');
+});
+
+// ── Widgets: Tooltip ──
+document.querySelector('.w-tooltip-target').addEventListener('mouseenter',function(e){ log(e,'widget'); });
+document.querySelector('.w-tooltip-target').addEventListener('mouseleave',function(e){ log(e,'widget'); });
+
+// ══════════════════════════════════════════
+// ── Automation Testing Event Listeners ──
+// ══════════════════════════════════════════
+
+// File Upload
+var fileInput=document.getElementById('file-input');
+var uploadZone=document.getElementById('upload-zone');
+fileInput.addEventListener('change',function(e){
+  log(e,'upload');
+  var files=e.target.files;
+  var names=Array.from(files).map(function(f){return f.name+' ('+Math.round(f.size/1024)+'KB)';}).join(', ');
+  document.getElementById('upload-result').textContent='Uploaded: '+names;
+});
+['dragenter','dragover','dragleave','drop'].forEach(function(t){
+  uploadZone.addEventListener(t,function(e){
+    e.preventDefault(); e.stopPropagation();
+    log(e,'upload');
+  });
+});
+uploadZone.addEventListener('drop',function(e){
+  if(e.dataTransfer&&e.dataTransfer.files.length){
+    fileInput.files=e.dataTransfer.files;
+    fileInput.dispatchEvent(new Event('change',{bubbles:true}));
+  }
+});
+
+// Keyboard Combos
+var comboZone=document.getElementById('combo-zone');
+comboZone.addEventListener('keydown',function(e){
+  e.preventDefault();
+  var keys=[];
+  if(e.ctrlKey) keys.push({k:'Ctrl',mod:true});
+  if(e.altKey) keys.push({k:'Alt',mod:true});
+  if(e.shiftKey) keys.push({k:'Shift',mod:true});
+  if(e.metaKey) keys.push({k:'Meta',mod:true});
+  if(!['Control','Alt','Shift','Meta'].includes(e.key)){
+    keys.push({k:e.key,mod:false});
+  }
+  comboZone.innerHTML=keys.map(function(k){
+    return '<span class="key-badge'+(k.mod?' mod':'')+'">'+k.k+'</span>';
+  }).join(' <span style="color:var(--text4)">+</span> ');
+  log(e,'combo');
+});
+comboZone.addEventListener('keyup',function(e){ log(e,'combo'); });
+comboZone.addEventListener('click',function(e){ log(e,'combo'); comboZone.focus(); });
+
+// Navigation History
+document.getElementById('nav-back').addEventListener('click',function(e){
+  log(e,'histnav');
+  log({type:'goBack',target:window},'histnav');
+  history.back();
+});
+document.getElementById('nav-forward').addEventListener('click',function(e){
+  log(e,'histnav');
+  log({type:'goForward',target:window},'histnav');
+  history.forward();
+});
+document.getElementById('nav-push').addEventListener('click',function(e){
+  var state={page:Date.now()};
+  history.pushState(state,'','#push-'+Date.now());
+  log(e,'histnav');
+  log({type:'pushState',target:window},'histnav');
+  document.getElementById('nav-history').textContent='pushState \u2014 History length: '+history.length;
+});
+document.getElementById('nav-replace').addEventListener('click',function(e){
+  var state={page:Date.now()};
+  history.replaceState(state,'','#replace-'+Date.now());
+  log(e,'histnav');
+  log({type:'replaceState',target:window},'histnav');
+  document.getElementById('nav-history').textContent='replaceState \u2014 History length: '+history.length;
+});
+document.getElementById('nav-hash').addEventListener('click',function(e){
+  log(e,'histnav');
+  window.location.hash='#test-'+Date.now();
+  document.getElementById('nav-history').textContent='Hash changed \u2014 History length: '+history.length;
+});
+document.getElementById('nav-reload').addEventListener('click',function(e){
+  log(e,'histnav');
+  log({type:'beforeReload',target:window},'histnav');
+  // Don't actually reload - just log the intent
+  document.getElementById('nav-history').textContent='Reload triggered (blocked to preserve log)';
+});
+window.addEventListener('popstate',function(e){ log(e,'histnav'); document.getElementById('nav-history').textContent='popstate \u2014 History length: '+history.length; });
+window.addEventListener('hashchange',function(e){ log(e,'histnav'); });
+
+// iframe
+(function(){
+  var ifr=document.getElementById('test-iframe');
+  ifr.addEventListener('load',function(){
+    try {
+      var doc=ifr.contentDocument;
+      if(!doc) return;
+      ['click','input','change','focus','blur','keydown','mousedown','mouseup'].forEach(function(t){
+        doc.addEventListener(t,function(e){
+          log({type:e.type,target:e.target,offsetX:e.offsetX||0,offsetY:e.offsetY||0,
+               key:e.key,code:e.code,button:e.button,
+               _iframeSrc:'test-iframe'},'iframe');
+        });
+      });
+    } catch(ex){ /* cross-origin blocked */ }
+  });
+})();
+
+// Shadow DOM
+(function(){
+  var host=document.getElementById('shadow-host');
+  var shadow=host.attachShadow({mode:'open'});
+  shadow.innerHTML=
+    '<style>'+
+      ':host{display:block}'+
+      'button{padding:6px 12px;background:#6366f1;color:white;border:none;border-radius:4px;cursor:pointer;font-size:11px;font-family:monospace;margin:4px}'+
+      'button:hover{opacity:0.8}'+
+      'input{padding:5px 8px;background:#22252f;border:1px solid #3f3f46;border-radius:4px;color:#e4e6eb;font-size:11px;font-family:monospace;margin:4px;outline:none}'+
+      'select{padding:5px 8px;background:#22252f;border:1px solid #3f3f46;border-radius:4px;color:#e4e6eb;font-size:11px;font-family:monospace;margin:4px}'+
+      '.label{color:#71717a;font-size:10px;font-family:monospace;margin-bottom:6px}'+
+    '</style>'+
+    '<div class="label">Inside shadow root \u2014 open mode</div>'+
+    '<button id="shadow-btn" data-testid="shadow-action">Shadow Button</button>'+
+    '<input id="shadow-input" placeholder="Shadow input" aria-label="Shadow text field">'+
+    '<select id="shadow-sel"><option>Pick</option><option>X</option><option>Y</option></select>';
+
+  ['click','input','change','focus','blur','keydown','mousedown','mouseup'].forEach(function(t){
+    shadow.addEventListener(t,function(e){
+      log({type:e.type,target:e.target,offsetX:e.offsetX||0,offsetY:e.offsetY||0,
+           key:e.key,code:e.code,button:e.button,
+           _shadow:true},'shadow');
+    });
+  });
+})();
+
+// Dynamic Content
+(function(){
+  var stage=document.getElementById('dyn-stage');
+  var target=document.getElementById('dyn-target');
+
+  document.getElementById('dyn-show').addEventListener('click',function(e){
+    log(e,'dynamic');
+    target.style.display=''; target.textContent='Target element \u2014 visible';
+    target.classList.add('appear');
+    setTimeout(function(){target.classList.remove('appear');},300);
+    log({type:'element-appear',target:target},'dynamic');
+  });
+  document.getElementById('dyn-hide').addEventListener('click',function(e){
+    log(e,'dynamic');
+    target.style.display='none';
+    log({type:'element-disappear',target:target},'dynamic');
+  });
+  document.getElementById('dyn-toggle').addEventListener('click',function(e){
+    log(e,'dynamic');
+    var hidden=target.style.visibility==='hidden';
+    target.style.visibility=hidden?'':'hidden';
+    target.style.opacity=hidden?'1':'0';
+    log({type:hidden?'element-visible':'element-hidden',target:target},'dynamic');
+  });
+  document.getElementById('dyn-lazy').addEventListener('click',function(e){
+    log(e,'dynamic');
+    stage.innerHTML='<div class="spinner-el"></div><span style="font-family:var(--mono);font-size:0.58rem;color:var(--text4);margin-left:8px">Loading...</span>';
+    log({type:'lazy-load-start',target:stage},'dynamic');
+    setTimeout(function(){
+      stage.innerHTML='<div class="dynamic-el appear" id="dyn-target" style="background:var(--green-bg);color:var(--green)">Lazy-loaded content appeared after 2s</div>';
+      target=document.getElementById('dyn-target');
+      log({type:'lazy-load-complete',target:stage},'dynamic');
+    },2000);
+  });
+  document.getElementById('dyn-spinner').addEventListener('click',function(e){
+    log(e,'dynamic');
+    stage.innerHTML='<div style="display:flex;align-items:center;gap:8px"><div class="spinner-el spinner"></div><span style="font-family:var(--mono);font-size:0.58rem;color:var(--text4)">Spinner active (.spinner class)</span></div>';
+    log({type:'spinner-shown',target:stage},'dynamic');
+  });
+  document.getElementById('dyn-skeleton').addEventListener('click',function(e){
+    log(e,'dynamic');
+    stage.innerHTML='<div class="skeleton-el loader" style="width:80%;margin-bottom:6px"></div><div class="skeleton-el loader" style="width:50%;margin-bottom:6px"></div><div class="skeleton-el loader" style="width:65%"></div>';
+    log({type:'skeleton-shown',target:stage},'dynamic');
+  });
+  document.getElementById('dyn-swap').addEventListener('click',function(e){
+    log(e,'dynamic');
+    var r=Math.random().toString(36).slice(2,8);
+    stage.innerHTML='<div class="dynamic-el appear" id="dyn-target" style="background:rgba(251,191,36,0.1);color:var(--amber)">Swapped content: '+r+'</div>';
+    target=document.getElementById('dyn-target');
+    log({type:'content-swap',target:stage},'dynamic');
+  });
+  document.getElementById('dyn-reset').addEventListener('click',function(e){
+    log(e,'dynamic');
+    stage.innerHTML='<div class="dynamic-el" id="dyn-target" style="background:var(--accent-glow);color:var(--accent)">Target element \u2014 visible</div>';
+    target=document.getElementById('dyn-target');
+  });
+})();
+
+// Selector Playground
+document.querySelectorAll('.sel-target, .sel-dup').forEach(function(el){
+  ['click','mouseenter','mouseleave','focus','blur'].forEach(function(t){
+    el.addEventListener(t,function(e){ log(e,'seltest'); });
+  });
+});
 
 // Animation
 var ae=document.getElementById('anim-el');
